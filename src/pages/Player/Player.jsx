@@ -1,15 +1,18 @@
 import "./Player.css";
 import back_arrow_icon from "../../assets/back_arrow_icon.png";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Player = () => {
+  const navigate = useNavigate();
+  const {id} = useParams();
+  const [apiData, setApiData] = useState({
+    name: "",
+    key: "",
+    published_at: "",
+    typeof: "",
+  }); 
 
-  const [apiData,setApiData] = usestate({
-    name:"",
-    key:"",
-    published_at:"",
-    typeof: ""
-  });
   const options = {
     method: "GET",
     headers: {
@@ -21,7 +24,7 @@ const Player = () => {
 
   useEffect(() => {
     fetch(
-      "https://api.themoviedb.org/3/movie/1022789/videos?language=en-US",
+      `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US`,
       options
     )
       .then((response) => response.json())
@@ -30,7 +33,7 @@ const Player = () => {
   }, []);
   return (
     <div className="player">
-      <img src={back_arrow_icon} alt="" />
+      <img src={back_arrow_icon} alt="" onClick={()=>{navigate(-2)}}/>
       <iframe
         src={`https://www.youtube.com/embed/${apiData.key}`}
         width="90%"
@@ -40,9 +43,9 @@ const Player = () => {
         allowFullScreen
       ></iframe>
       <div className="player-info">
-        <p>apiData.published_at</p>
-        <p>apiData.name</p>
-        <p>apiData.type</p>
+        <p>{apiData.published_at.slice(0,10)}</p>
+        <p>{apiData.name}</p>
+        <p>{apiData.type}</p>
       </div>
     </div>
   );
